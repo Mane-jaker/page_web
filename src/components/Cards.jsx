@@ -1,24 +1,39 @@
-import { Button, Card } from "flowbite-react";
+import { Card } from "flowbite-react";
+import { Link } from "react-router-dom";
 import Image from "../assets/xiles.png"
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 function Cards() {
 
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const element = document.querySelector(location.hash);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [location.hash]);
+
   return (
+    <Link to="/product/1">
     <Card
-      className="max-w-sm kaisei"
-      imgAlt="Apple Watch Series 7 in colors pink, silver, and black"
+      className="max-w-sm transform transition-transform duration-300 hover:scale-105"
+      imgAlt="Xiles mi abuelita img"
       imgSrc= {Image}
     >
       <a href="#">
-        <h5 className="text-lg font-medium text-center text-gray-900 dark:text-white">
+        <h5 className="text-lg kaisei  font-bold text-center text-gray-900 dark:text-white">
           Salsa de Xile Morita con cacahuate a base de aceite de oliva, 275g.        
         </h5>
       </a>
-      <div className="flex items-center justify-between">
-        <span className="text-lg font-semibold text-gray-900 dark:text-white">$599</span>
-        <Button color={"light"}>Add to Cart</Button>
-      </div>
+      <p className="text-center text-xl text-gray-700 dark:text-gray-300 ">
+        $200.00
+      </p>
     </Card>
+    </Link>
   );
 }
 

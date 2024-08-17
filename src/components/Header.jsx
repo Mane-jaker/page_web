@@ -1,14 +1,24 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import logo from '../assets/logo.svg';
 
-
 function Header() {
-    // Estado para controlar si el menú está colapsado o no
     const [isCollapsed, setIsCollapsed] = useState(true);
+    const navigate = useNavigate();
 
     const toggleMenu = () => {
         setIsCollapsed(!isCollapsed);
+    };
+
+    const handleLinkClick = (hash) => {
+        navigate('/', { replace: true }); // Resetea el hash
+        setTimeout(() => {
+            navigate(hash); // Cambia la URL para que tenga el hash
+            const element = document.querySelector(hash);
+            if (element) {
+                element.scrollIntoView({ behavior: "smooth" });
+            }
+        }, 0); // Asegura que el navegador procese el cambio de hash
     };
 
     return (
@@ -17,26 +27,29 @@ function Header() {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-8 w-full">
                         <div className="shrink-0">
-                            <a href="#" title="" className="">
+                            <a href="/" onClick={() => navigate('/')}>
                                 <img src={logo} alt="Logo" className="h-32 w-32" />
                             </a>
                         </div>
 
                         <ul className="hidden lg:flex items-center justify-start gap-6 md:gap-8 py-3 sm:justify-end w-full">
                             <li>
-                                <Link to="/" className="flex text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500">
+                                <a href="/" onClick={() => navigate('/')} className="flex text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500">
                                     Home
-                                </Link>
+                                </a>
                             </li>
                             <li className="shrink-0">
-                                <a href="#" title="" className="flex text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500">
-                                    Informacion
+                                <a
+                                    onClick={() => handleLinkClick("#informacion")}
+                                    className="cursor-pointer flex text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500"
+                                >
+                                    Información
                                 </a>
                             </li>
                             <li>
-                                <Link to="/cart" className="flex text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500">
+                                <a href="/cart" onClick={() => navigate('/cart')} className="flex text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500">
                                     Carrito(1)
-                                </Link>
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -63,13 +76,18 @@ function Header() {
                 >
                     <ul className="text-gray-900 dark:text-white text-sm font-medium dark:text-white space-y-3">
                         <li>
-                            <Link to="/" className="hover:text-primary-700 dark:hover:text-primary-500">Home</Link>
+                            <a href="/" onClick={() => navigate('/')} className="hover:text-primary-700 dark:hover:text-primary-500">Home</a>
                         </li>
                         <li>
-                            <a href="#" className="hover:text-primary-700 dark:hover:text-primary-500">Informacion</a>
+                            <a
+                                onClick={() => handleLinkClick("#informacion")}
+                                className="hover:text-primary-700 dark:hover:text-primary-500 cursor-pointer"
+                            >
+                                Información
+                            </a>
                         </li>
                         <li>
-                            <Link to="/cart" className="hover:text-primary-700 dark:hover:text-primary-500">Carrito(1)</Link>
+                            <a href="/cart" onClick={() => navigate('/cart')} className="hover:text-primary-700 dark:hover:text-primary-500">Carrito(1)</a>
                         </li>
                     </ul>
                 </div>

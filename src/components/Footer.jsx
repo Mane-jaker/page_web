@@ -1,5 +1,4 @@
 import logo from '../assets/logo.svg';
-import instagramLogo from '../assets/instagram.svg'; // Asegúrate de tener el logo de Instagram como SVG o PNG
 
 function Footer() {
     return (
@@ -10,8 +9,7 @@ function Footer() {
                 </a>
                 
                 <div className="flex justify-center items-center my-4">
-                    <img src={instagramLogo} alt="Instagram" className="h-6 w-6 mr-2" />
-                    <a href="#" className="hover:underline text-gray-900 dark:text-white">Instagram</a>
+                    <a href="https://www.instagram.com/xilesdemiabuela/?next=%2F" className="hover:underline text-gray-900 dark:text-white">INSTAGRAM</a>
                 </div>
                 
                 <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
