@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from '../assets/logo.svg';
+import instagram from '../assets/instagram.svg';
 
 function Header() {
     const [isCollapsed, setIsCollapsed] = useState(true);
@@ -40,10 +41,15 @@ function Header() {
                             </li>
                             <li className="shrink-0">
                                 <a
-                                    onClick={() => handleLinkClick("#informacion")}
+                                    onClick={() => handleLinkClick("/#informacion")}
                                     className="cursor-pointer flex text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500"
                                 >
                                     Información
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.instagram.com/xilesdemiabuela/?next=%2F" >
+                                    <img src={instagram} alt="Logo" className="h-7 w-7" />
                                 </a>
                             </li>
                             <li>
@@ -80,7 +86,7 @@ function Header() {
                         </li>
                         <li>
                             <a
-                                onClick={() => handleLinkClick("#informacion")}
+                                onClick={() => handleLinkClick("/#informacion")}
                                 className="hover:text-primary-700 dark:hover:text-primary-500 cursor-pointer"
                             >
                                 Información

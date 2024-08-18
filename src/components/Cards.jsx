@@ -1,8 +1,7 @@
 import { Card } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Image from "../assets/xiles.png"
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 
 function Cards() {
 
