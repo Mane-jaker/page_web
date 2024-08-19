@@ -1,9 +1,17 @@
 import { Card } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
-import Image from "../assets/xiles.png"
 import { useEffect } from 'react';
+import PropTypes from 'prop-types';
 
-function Cards() {
+Cards.propTypes = {
+  id: PropTypes.number.isRequired,
+  image: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  quantity: PropTypes.string.isRequired,
+  price: PropTypes.string.isRequired,
+};
+
+function Cards({ id, image, name, quantity, price }) {
 
   const location = useLocation();
 
@@ -17,22 +25,22 @@ function Cards() {
   }, [location.hash]);
 
   return (
-    <Link to="/product/1">
-    <Card
-      className="max-w-sm transform transition-transform duration-300 hover:scale-105"
-      imgAlt="Xiles mi abuelita img"
-      imgSrc= {Image}
-    >
-      <a href="#">
-        <h5 className="text-lg kaisei  font-bold text-center text-gray-900 dark:text-white">
-          Salsa de Xile Morita con cacahuate a base de aceite de oliva, 275g.        
-        </h5>
-      </a>
-      <p className="text-center text-xl text-gray-700 dark:text-gray-300 ">
-        $200.00
-      </p>
-    </Card>
-    </Link>
+    <div key={id}>
+      <Link to={`/product/${id}`}>
+        <Card
+          className="max-w-sm transform transition-transform duration-300 hover:scale-105"
+          imgAlt="Xiles mi abuelita img"
+          imgSrc={image}
+        >
+          <h5 className="text-lg kaisei  font-bold text-center text-gray-900 dark:text-white">
+            {name}, {quantity}
+          </h5>
+          <p className="text-center text-xl text-gray-700 dark:text-gray-300 ">
+            {price}
+          </p>
+        </Card>
+      </Link>
+    </div>
   );
 }
 

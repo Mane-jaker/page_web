@@ -1,15 +1,19 @@
 import { Breadcrumb } from "flowbite-react";
-import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
 
-function BreadCrumb() {
+BreadCrumb.propTypes = {
+  name: PropTypes.string.isRequired
+};
+
+function BreadCrumb({ name }) {
+
+
   return (
     <Breadcrumb aria-label="Default breadcrumb example" className="font-bold kaisei">
-    <Link to="/">
-      <Breadcrumb.Item href="">
+      <Breadcrumb.Item href="/">
         productos
       </Breadcrumb.Item>
-    </Link>
-      <Breadcrumb.Item>Xile morita con cacahuate</Breadcrumb.Item>
+      <Breadcrumb.Item>{name}</Breadcrumb.Item>
     </Breadcrumb>
   );
 }
