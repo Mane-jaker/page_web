@@ -1,59 +1,41 @@
 import { createContext, useState, useEffect } from 'react';
-import image from '../assets/xiles.png';
 import PropTypes from 'prop-types';
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 
 export const ProductsContext = createContext();
 
 export const ProductsProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const firebaseConfig = {
+    apiKey: import.meta.env.VITE_API_KEY,
+    authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_APP_ID,
+    measurementId: import.meta.env.VITE_MEASUREMENT_ID
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
   useEffect(() => {
-  
-      const simulatedData = [
-        {
-          id: 1,
-          image: image,
-          name: "Salsa de Xile Morita con cacahuate a base de aceite de oliva",
-          stock: 10,
-          quantity: "275g",
-          price: "$200.00",
-          description: "The best tote bag in the world! Fits a gigantic shop, keeps your phone and keys out of your tomatoes, has soft wide straps to make it a dream to carry, and even has a wine bottle loop. And it makes you look like a style legend even in your joggers. You’ll never want to go out without it. Also available in our Blood Orange design. Heavyweight 100% organic cotton natural canvas tote bag. Inside features: bottle loop and two pockets for phone / wallet. Gusseted."
-        },
-        {
-          id: 2,
-          image: image,
-          name: "Salsa de Xile Morita con cacahuate a base de aceite de oliva",
-          stock: 5,
-          quantity: "500g",
-          price: "$350.00",
-          description: "The best tote bag in the world! Fits a gigantic shop, keeps your phone and keys out of your tomatoes, has soft wide straps to make it a dream to carry, and even has a wine bottle loop. And it makes you look like a style legend even in your joggers. You’ll never want to go out without it. Also available in our Blood Orange design. Heavyweight 100% organic cotton natural canvas tote bag. Inside features: bottle loop and two pockets for phone / wallet. Gusseted."
-        },
-        {
-          id: 3,
-          image: image,
-          name: "Salsa de Xile Morita con cacahuate a base de aceite de oliva",
-          stock: 20,
-          quantity: "300g",
-          price: "$600.00",
-          description: "The best tote bag in the world! Fits a gigantic shop, keeps your phone and keys out of your tomatoes, has soft wide straps to make it a dream to carry, and even has a wine bottle loop. And it makes you look like a style legend even in your joggers. You’ll never want to go out without it. Also available in our Blood Orange design. Heavyweight 100% organic cotton natural canvas tote bag. Inside features: bottle loop and two pockets for phone / wallet. Gusseted."
-        },
-        {
-          id: 4,
-          image: image,
-          name: "Salsa de Xile Morita con cacahuate a base de aceite de oliva",
-          stock: 20,
-          quantity: "300g",
-          price: "$5500.00",
-          description: "The best tote bag in the world! Fits a gigantic shop, keeps your phone and keys out of your tomatoes, has soft wide straps to make it a dream to carry, and even has a wine bottle loop. And it makes you look like a style legend even in your joggers. You’ll never want to go out without it. Also available in our Blood Orange design. Heavyweight 100% organic cotton natural canvas tote bag. Inside features: bottle loop and two pockets for phone / wallet. Gusseted."
-        }
-      ];
+    const fetchProducts = async () => {
+      setLoading(true);
+      const querySnapshot = await getDocs(collection(db, "products"));
+      const productsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setProducts(productsList);
+      setLoading(false);
+    };
 
-      setProducts(simulatedData);
-    
-  }, []);
+    fetchProducts();
+  }, [db]);
 
   return (
-    <ProductsContext.Provider value={{ products, setProducts }}>
+    <ProductsContext.Provider value={{ products, setProducts, loading }}>
       {children}
     </ProductsContext.Provider>
   );

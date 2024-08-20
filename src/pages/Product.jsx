@@ -3,17 +3,22 @@ import BreadCrumb from "../components/BreadCrumb";
 import { ProductsContext } from "../components/ContextProvider";
 import { useParams } from 'react-router-dom';
 import Carousels from '../components/Carousel';
+import img from '../assets/xiles.png';
 
 function Product() {
   const { id } = useParams();
-  const { products } = useContext(ProductsContext);
-  const product = products.find(p => p.id === parseInt(id));
+  const { products, loading } = useContext(ProductsContext);
+  const product = products.find(p => p.id === id);
   const [quantity, setQuantity] = useState(1);
 
   const handleQuantityChange = (e) => {
     const value = Math.max(1, Math.min(product.stock, parseInt(e.target.value)));
     setQuantity(value);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   if (!product) {
     return (
@@ -37,7 +42,7 @@ function Product() {
       </div>
       <div className="flex flex-wrap w-full">
         <div className="w-full md:w-1/2 pr-2">
-          <img src={product.image} alt="Xiles" className="w-full" />
+          <img src={img} alt="Xiles" className="w-full" />
         </div>
         <div className="w-full md:w-1/2 pl-2 space-y-6">
           <h1 className="font-bold kaisei text-2xl">{product.name}</h1>
