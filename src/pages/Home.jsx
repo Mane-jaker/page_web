@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ProductsContext } from "../components/ContextProvider";
+import { ProductsContext } from "../context/ProductsContext";
 import Cards from "../components/Cards";
 
 function Home() {

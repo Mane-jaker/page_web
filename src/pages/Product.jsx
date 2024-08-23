@@ -1,15 +1,17 @@
 import { useContext, useState } from 'react';
 import BreadCrumb from "../components/BreadCrumb";
-import { ProductsContext } from "../components/ContextProvider";
+import { ProductsContext } from "../context/ProductsContext";
 import { useParams } from 'react-router-dom';
 import Carousels from '../components/Carousel';
 import img from '../assets/xiles.png';
+import { CartContext } from '../context/CartContext';
 
-function Product() {
+function Product( ) {
   const { id } = useParams();
   const { products, loading } = useContext(ProductsContext);
   const product = products.find(p => p.id === id);
   const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useContext(CartContext)
 
   const handleQuantityChange = (e) => {
     const value = Math.max(1, Math.min(product.stock, parseInt(e.target.value)));
@@ -67,7 +69,7 @@ function Product() {
               {product.description}
             </p>
           </div>
-          <button className="bg-black hover:bg-gray-700 text-white py-3 px-4 text-sm">
+          <button className="bg-black hover:bg-gray-700 text-white py-3 px-4 text-sm" onClick={() => addToCart(product)}>
             Agregar al carrito
           </button>
         </div>
