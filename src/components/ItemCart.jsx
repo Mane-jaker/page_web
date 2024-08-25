@@ -1,12 +1,28 @@
-import Image from "../assets/xiles.png";
+/* eslint-disable react/prop-types */
+import  { useState } from 'react';
 
-function ItemCart() {
+function ItemCart({ image, description, initialQuantity, price, removeFromCart }) {
+  // Estado para la cantidad del producto
+  const [quantity, setQuantity] = useState(initialQuantity);
+
+  // Función para manejar la disminución de la cantidad
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  // Función para manejar el aumento de la cantidad
+  const incrementQuantity = () => {
+    setQuantity(quantity + 1);
+  };
+
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
       <div className="space-y-4 md:flex md:items-start md:justify-between md:gap-6 md:space-y-0">
         {/* Imagen del producto */}
         <a href="#" className="shrink-0 md:order-1">
-          <img className="h-52" src={Image} alt="image" />
+          <img className="h-52" src={image} alt="product imae" />
         </a>
 
         {/* Control de cantidad y precio */}
@@ -14,8 +30,7 @@ function ItemCart() {
           <div className="flex items-center">
             <button
               type="button"
-              id="decrement-button"
-              data-input-counter-decrement="counter-input"
+              onClick={decrementQuantity}
               className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
             >
               <svg
@@ -35,16 +50,13 @@ function ItemCart() {
             </button>
             <input
               type="text"
-              id="counter-input"
-              data-input-counter
               className="mx-2 w-12 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white"
-              value="2"
+              value={quantity}
               readOnly
             />
             <button
               type="button"
-              id="increment-button"
-              data-input-counter-increment="counter-input"
+              onClick={incrementQuantity}
               className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
             >
               <svg
@@ -65,9 +77,10 @@ function ItemCart() {
           </div>
 
           <div className="flex items-center ml-4">
-            <p className="text-base font-bold text-gray-900 dark:text-white">$200.00</p>
+            <p className="text-base font-bold text-gray-900 dark:text-white">${price.toFixed(2)}</p>
             <button
               type="button"
+              onClick={removeFromCart}
               className="ml-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-600"
             >
               <svg
@@ -89,7 +102,7 @@ function ItemCart() {
             href="#"
             className="text-base font-medium text-gray-900 hover:underline dark:text-white"
           >
-            Salsa de Xile Morita con cacahuate a base de aceite de oliva, 275g.
+            {description}
           </a>
         </div>
       </div>
