@@ -6,16 +6,33 @@ import Carousels from '../components/Carousel';
 import img from '../assets/xiles.png';
 import { CartContext } from '../context/CartContext';
 
-function Product( ) {
+function Product() {
   const { id } = useParams();
   const { products, loading } = useContext(ProductsContext);
   const product = products.find(p => p.id === id);
   const [quantity, setQuantity] = useState(1);
-  const { addToCart } = useContext(CartContext)
+  const { addToCart, cart } = useContext(CartContext);
+
+  // Nuevo estado para controlar si el producto se está agregando
+  const [isAdding, setIsAdding] = useState(false);
 
   const handleQuantityChange = (e) => {
     const value = Math.max(1, Math.min(product.stock, parseInt(e.target.value)));
     setQuantity(value);
+  };
+
+  const handleAddToCart = () => {
+    setIsAdding(true); // Activa el estado de "agregando"
+    addToCart({
+      id: product.id,
+      name: product.name,
+      quantity: quantity,
+      price: product.price
+    });
+    console.log(cart)
+    setTimeout(() => {
+      setIsAdding(false); // Desactiva el estado de "agregando"
+    }, 1000); // Simula un retraso de 1 segundo (puedes ajustar esto según sea necesario)
   };
 
   if (loading) {
@@ -26,7 +43,7 @@ function Product( ) {
     return (
       <div className="max-w-screen-xl px-4 mx-auto 2xl:px-0 py-4 space-y-6">
         <div className="w-full">
-          <BreadCrumb name={product.name}/>
+          <BreadCrumb name={product.name} />
         </div>
         <h1 className="font-bold kaisei text-6xl py-44">Producto no disponible</h1>
         <h1 className="font-bold kaisei text-4xl">Productos recomendados</h1>
@@ -34,13 +51,13 @@ function Product( ) {
           <Carousels />
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="max-w-screen-xl px-4 mx-auto 2xl:px-0 py-4 space-y-6">
       <div className="w-full">
-        <BreadCrumb name={product.name}/>
+        <BreadCrumb name={product.name} />
       </div>
       <div className="flex flex-wrap w-full">
         <div className="w-full md:w-1/2 pr-2">
@@ -65,17 +82,19 @@ function Product( ) {
             />
           </div>
           <div>
-            <p>
-              {product.description}
-            </p>
+            <p>{product.description}</p>
           </div>
-          <button className="bg-black hover:bg-gray-700 text-white py-3 px-4 text-sm" onClick={() => addToCart(product)}>
-            Agregar al carrito
+          <button
+            className="bg-black hover:bg-gray-700 text-white py-3 px-4 text-sm"
+            onClick={handleAddToCart}
+            disabled={isAdding} // Deshabilita el botón mientras se está agregando
+          >
+            {isAdding ? 'Agregando...' : 'Agregar al carrito'}
           </button>
         </div>
       </div>
       <h1 className="font-bold kaisei text-4xl">Productos</h1>
-        <Carousels />
+      <Carousels />
     </div>
   );
 }

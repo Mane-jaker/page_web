@@ -77,7 +77,7 @@ function ItemCart({ image, description, initialQuantity, price, removeFromCart }
           </div>
 
           <div className="flex items-center ml-4">
-            <p className="text-base font-bold text-gray-900 dark:text-white">${price.toFixed(2)}</p>
+            <p className="text-base font-bold text-gray-900 dark:text-white">${price}</p>
             <button
               type="button"
               onClick={removeFromCart}
