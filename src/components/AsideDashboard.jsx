@@ -1,18 +1,24 @@
+import { signOut } from 'firebase/auth';
 import out from '../assets/out.svg'
+import { auth } from '../components/firebaseConfig';
 
 function AsideDashboard() {
+    const handleLogout = () => {
+        signOut(auth);
+    };
+
     return (
-        <aside class="w-40 fixed h-full bg-white border-r border-gray-200">
-            <div class="py-5 px-3 h-full bg-white">
+        <aside className="w-40 fixed h-full bg-white border-r border-gray-200">
+            <div className="py-5 px-3 h-full bg-white">
                 <ul>
                     <li>
                         <a
                             href="#"
-                            class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg hover:bg-gray-100 group"
+                            className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg hover:bg-gray-100 group"
                         >
                             <svg
                                 aria-hidden="true"
-                                class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                                className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -23,18 +29,18 @@ function AsideDashboard() {
                                     clip-rule="evenodd"
                                 ></path>
                             </svg>
-                            <span class="ml-3">Productos</span>
+                            <span className="ml-3">Productos</span>
                         </a>
                     </li>
                 </ul>
-                <ul class="pt-5 mt-5 space-y-2 border-t border-gray-200">
+                <ul className="pt-5 mt-5 space-y-2 border-t border-gray-200">
                     <li>
                         <a
                             href="#"
-                            class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
+                            className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
                         >
                             <img src={out} alt="salir" className="w-6 h-6" />
-                            <span class="ml-3">Salir</span>
+                            <span className="ml-3" onClick={handleLogout}>Salir</span>
                         </a>
                     </li>
                 </ul>

@@ -1,4 +1,7 @@
+import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from './components/firebaseConfig'; // Asegúrate de tener la configuración de Firebase
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -7,8 +10,25 @@ import Cart from './pages/Cart';
 import Dashboard from './pages/Dashboard';
 import { ProductsProvider } from './context/ProductsContext';
 import { CartProvider } from './context/CartContext';
+import Login from './components/Login';
 
 function App() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return <div>Cargando...</div>; // Puedes poner un spinner aquí
+  }
+
   return (
     <ProductsProvider>
       <CartProvider>
@@ -31,8 +51,11 @@ function App() {
                 </div>
               }
             />
-            {/* Ruta para el Dashboard con su propio Header y Footer */}
-            <Route path="/admin" element={<Dashboard />} />
+            {/* Ruta para el Dashboard con protección */}
+            <Route 
+              path="/admin" 
+              element={user ? <Dashboard /> : <Login />} 
+            />
           </Routes>
         </Router>
       </CartProvider>
@@ -41,4 +64,5 @@ function App() {
 }
 
 export default App;
+
 

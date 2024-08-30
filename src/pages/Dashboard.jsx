@@ -4,13 +4,12 @@ import LayoutDashboard from "../components/LayoutDashboard"
 
 function Dashboard() {
     return (
-        <div class="antialiased bg-gray-50">
+        <div className="antialiased bg-gray-50">
             <HeaderDashboard />
-            <div class="flex h-screen mt-24">
+            <div className="flex h-screen mt-24">
                 <AsideDashboard />
                 <LayoutDashboard />
             </div>
-
         </div>
     )
 }
