@@ -36,7 +36,7 @@ function App() {
           <Routes>
             {/* Ruta principal con Header y Footer */}
             <Route
-              path="/"
+              path="*"
               element={
                 <div className="flex flex-col min-h-screen">
                   <Header />
