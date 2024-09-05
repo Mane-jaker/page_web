@@ -34,10 +34,10 @@ function Cards({ id, name, quantity, price }) {
           imgSrc={img}
         >
           <h5 className="text-lg kaisei  font-bold text-center text-gray-900 dark:text-white">
-            {name}, {quantity}
+            {name}, {quantity}g
           </h5>
           <p className="text-center text-xl text-gray-700 dark:text-gray-300 ">
-            {price}
+            ${price}.00
           </p>
         </Card>
       </Link>

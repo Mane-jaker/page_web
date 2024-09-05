@@ -67,9 +67,9 @@ function Product() {
           <h1 className="font-bold kaisei text-2xl">{product.name}</h1>
           <div className="flex items-center space-x-2">
             <h1 className="text-lg">Precio:</h1>
-            <p className="text-lg text-orange-500">{product.price}</p>
+            <p className="text-lg text-orange-500">${product.price}.00</p>
           </div>
-          <h1 className="text-lg">Cont. Neto. {product.quantity}</h1>
+          <h1 className="text-lg">Cont. Neto. {product.quantity}g</h1>
           <div className="space-y-1">
             <h1 className="text-xs kaisei font-bold">Cantidad :</h1>
             <input
