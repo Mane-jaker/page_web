@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../components/firebaseConfig';
+import { uploadImageToS3 } from '../aws/aws-config'
 
 function LayoutDashboard() {
     const [products, setProducts] = useState([]);
@@ -10,6 +11,9 @@ function LayoutDashboard() {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImageUrl, setSelectedImageUrl] = useState(null);
+    const fileInputRef = useRef(null);
 
     const fetchProducts = async () => {
         const querySnapshot = await getDocs(collection(db, 'products'));
@@ -21,11 +25,35 @@ function LayoutDashboard() {
         fetchProducts();
     }, []);
 
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const imageUrl = await uploadImageToS3(file);
+            setSelectedImageUrl(imageUrl);
+        }
+    };
+
+    const handleClick = () => {
+        // Simula el click en el input file
+        fileInputRef.current.click();
+    };
+
     const handleAddProduct = async () => {
-        await addDoc(collection(db, 'products'), newProduct);
-        setNewProduct({ name: '', price: '', description: '', quantity: '', stock: '' });
-        setIsAddModalOpen(false);
-        fetchProducts();
+        try {
+
+            const productData = {
+                ...newProduct,
+                imageUrl: selectedImageUrl,
+            };
+
+            await addDoc(collection(db, 'products'), productData);
+            setNewProduct({ name: '', price: '', description: '', quantity: '', stock: '' });
+            setSelectedImage(null);
+            setIsAddModalOpen(false);
+            fetchProducts();
+        } catch (err) {
+            console.error('Error adding product:', err);
+        }
     };
 
     const handleEditProduct = async () => {
@@ -100,7 +128,7 @@ function LayoutDashboard() {
                 </table>
                 {isAddModalOpen && (
                     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white p-5 rounded-lg w-1/2">
+                        <div className="bg-white p-5 rounded-lg w-1/2 max-h-[70vh] overflow-y-auto">
                             <h2 className="text-xl font-medium mb-4">Agregar Producto</h2>
                             <form onSubmit={(e) => { e.preventDefault(); handleAddProduct(); }}>
                                 <input
@@ -118,7 +146,7 @@ function LayoutDashboard() {
                                     className="block w-full p-3 mb-4 border border-gray-300 rounded"
                                 />
                                 <textarea
-                                    placeholder="Descripcion"
+                                    placeholder="Descripción"
                                     value={newProduct.description}
                                     onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
                                     className="block w-full p-3 mb-4 border border-gray-300 rounded h-32"
@@ -137,6 +165,36 @@ function LayoutDashboard() {
                                     onChange={(e) => setNewProduct({ ...newProduct, stock: e.target.value })}
                                     className="block w-full p-3 mb-4 border border-gray-300 rounded"
                                 />
+                                <div>
+                                    {/* Input de tipo file oculto */}
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                        ref={fileInputRef}
+                                        className="hidden"
+                                    />
+
+                                    {/* Botón estilizado */}
+                                    <button
+                                        type="button"
+                                        onClick={handleClick}
+                                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                    >
+                                        Seleccionar Imagen
+                                    </button>
+
+                                    {/* Vista previa de la imagen */}
+                                    {selectedImageUrl && (
+                                        <div className="mt-4 border border-gray-300 rounded-lg" style={{ width: '100%', height: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+                                            <img
+                                                src={selectedImageUrl}
+                                                alt="Vista previa"
+                                                style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
                                 <div className="flex justify-end space-x-4">
                                     <button type="submit" className="px-6 py-3 bg-blue-500 text-white rounded">Agregar</button>
                                     <button onClick={() => setIsAddModalOpen(false)} className="px-6 py-3 bg-gray-500 text-white rounded">Cancelar</button>
@@ -147,7 +205,7 @@ function LayoutDashboard() {
                 )}
                 {isEditModalOpen && (
                     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white p-5 rounded-lg w-1/2">
+                        <div className="bg-white p-5 rounded-lg w-1/2 max-h-[70vh] overflow-y-auto">
                             <h2 className="text-xl font-medium mb-4">Editar Producto</h2>
                             <form onSubmit={(e) => { e.preventDefault(); handleEditProduct(); }}>
                                 <input
@@ -194,7 +252,7 @@ function LayoutDashboard() {
                 )}
                 {isDeleteModalOpen && (
                     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white p-5 rounded-lg w-1/3">
+                        <div className="bg-white p-5 rounded-lg w-1/3 max-h-[70vh] overflow-y-auto">
                             <h2 className="text-xl font-medium mb-4">Confirmar Eliminación</h2>
                             <p>¿Estás seguro de que deseas eliminar este producto?</p>
                             <div className="mt-4 flex justify-end space-x-4">

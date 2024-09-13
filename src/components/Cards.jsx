@@ -12,7 +12,7 @@ Cards.propTypes = {
   price: PropTypes.string.isRequired,
 };
 
-function Cards({ id, name, quantity, price }) {
+function Cards({ id, name, quantity, price, image }) {
 
   const location = useLocation();
 
@@ -31,7 +31,7 @@ function Cards({ id, name, quantity, price }) {
         <Card
           className="max-w-sm transform transition-transform duration-300 hover:scale-105"
           imgAlt="Xiles mi abuelita img"
-          imgSrc={img}
+          imgSrc={image}
         >
           <h5 className="text-lg kaisei  font-bold text-center text-gray-900 dark:text-white">
             {name}, {quantity}g

@@ -53,7 +53,7 @@ function Home() {
           <Cards
             key={index}
             id={product.id}
-            image={product.image}
+            image={product.imageUrl}
             name={product.name}
             quantity={product.quantity}
             price={product.price}
