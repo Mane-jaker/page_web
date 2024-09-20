@@ -16,7 +16,7 @@ function Home() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             document.body.style.overflow = 'hidden';
-            entry.target.scrollIntoView({  block: 'center' });
+            entry.target.scrollIntoView({ block: 'center' });
             setTimeout(() => {
               entry.target.classList.add('animate-slideIn');
               document.body.style.overflow = 'auto';
@@ -45,11 +45,14 @@ function Home() {
     };
   }, []);
 
+  // Filtrar productos con cantidad mayor a 0
+  const availableProducts = products.filter(product => product.stock > 0);
+
   return (
     <div className="flex flex-col items-center space-y-6">
       <h1 className="font-bold kaisei text-center text-4xl">Productos</h1>
       <div className="mt-4 flex flex-wrap justify-center gap-8 min-h-screen">
-        {products.map((product, index) => (
+        {availableProducts.map((product, index) => (
           <Cards
             key={index}
             id={product.id}

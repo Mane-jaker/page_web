@@ -54,7 +54,7 @@ function Header() {
                             </li>
                             <li>
                                 <a href="/cart" onClick={() => navigate('/cart')} className="flex text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500">
-                                    Carrito(1)
+                                    Carrito
                                 </a>
                             </li>
                         </ul>

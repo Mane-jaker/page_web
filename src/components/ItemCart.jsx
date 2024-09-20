@@ -1,28 +1,38 @@
 /* eslint-disable react/prop-types */
-import  { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-function ItemCart({ image, description, initialQuantity, price, removeFromCart }) {
+function ItemCart({ image, description, initialQuantity, price, removeFromCart, inventory, incrementQuantity, decrementQuantity }) {
   // Estado para la cantidad del producto
   const [quantity, setQuantity] = useState(initialQuantity);
 
-  // Función para manejar la disminución de la cantidad
-  const decrementQuantity = () => {
+  useEffect(() => {
+    setQuantity(initialQuantity);
+  }, [initialQuantity]);
+
+  const handleIncrement = () => {
+    if (quantity < inventory) {
+      incrementQuantity();
+      setQuantity(quantity + 1);
+    } else {
+      alert(`Solo puedes pedir hasta ${inventory} unidades de este producto.`);
+    }
+  };
+
+  const handleDecrement = () => {
     if (quantity > 1) {
+      decrementQuantity();
       setQuantity(quantity - 1);
     }
   };
 
-  // Función para manejar el aumento de la cantidad
-  const incrementQuantity = () => {
-    setQuantity(quantity + 1);
-  };
+  const totalPrice = price * quantity;
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
       <div className="space-y-4 md:flex md:items-start md:justify-between md:gap-6 md:space-y-0">
         {/* Imagen del producto */}
         <a href="#" className="shrink-0 md:order-1">
-          <img className="h-52" src={image} alt="product imae" />
+          <img className="h-52" src={image} alt="product image" />
         </a>
 
         {/* Control de cantidad y precio */}
@@ -30,7 +40,7 @@ function ItemCart({ image, description, initialQuantity, price, removeFromCart }
           <div className="flex items-center">
             <button
               type="button"
-              onClick={decrementQuantity}
+              onClick={handleDecrement}
               className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
             >
               <svg
@@ -56,7 +66,7 @@ function ItemCart({ image, description, initialQuantity, price, removeFromCart }
             />
             <button
               type="button"
-              onClick={incrementQuantity}
+              onClick={handleIncrement}
               className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
             >
               <svg
@@ -77,7 +87,7 @@ function ItemCart({ image, description, initialQuantity, price, removeFromCart }
           </div>
 
           <div className="flex items-center ml-4">
-            <p className="text-base font-bold text-gray-900 dark:text-white">${price}</p>
+            <p className="text-base font-bold text-gray-900 dark:text-white">${totalPrice.toFixed(2)}</p>
             <button
               type="button"
               onClick={removeFromCart}
