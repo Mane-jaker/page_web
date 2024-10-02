@@ -20,7 +20,18 @@ export const CartProvider = ({ children }) => {
 
   // Funciones para manipular el carrito
   const addToCart = (product) => {
-    setCart((prevCart) => [...prevCart, product]);
+    setCart((prevCart) => {
+      const existingItem = prevCart.find(item => item.id === product.id);
+      if (existingItem) {
+        return prevCart.map(item =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + product.quantity }
+            : item
+        );
+      } else {
+        return [...prevCart, product];
+      }
+    });
   };
 
   const removeFromCart = (productId) => {

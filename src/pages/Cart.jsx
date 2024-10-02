@@ -1,8 +1,7 @@
 import ItemCart from "../components/ItemCart";
 import OrderSummary from "../components/OrderSummary";
-import Image1 from "../assets/xiles.png";
 import { useEffect, useState } from "react";
-import { collection, getDocs, addDoc, doc, updateDoc, increment } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { FaShoppingCart } from "react-icons/fa";
 import { db } from "../components/firebaseConfig";
 import { CartContext } from "../context/CartContext";
@@ -13,7 +12,7 @@ function Cart() {
     useContext(CartContext);
   const [inventory, setInventory] = useState({});
   const [preferenceId, setPreferenceId] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); 
 
   useEffect(() => {
     const fetchInventory = async () => {
@@ -40,9 +39,9 @@ function Cart() {
         const preferenceProduct = {
           items,
           back_urls: {
-            success: "http://localhost:5173/",
-            failure: "http://localhost:5173/",
-            pending: "http://localhost:5173/",
+            success: "http://localhost:5173/success",
+            failure: "http://localhost:5173/failure",
+            pending: "http://localhost:5173/pending",
           },
           auto_return: "approved",
           payment_methods: {
@@ -97,12 +96,6 @@ function Cart() {
             return;
           }
 
-          await addDoc(collection(db, "preferences"), {
-            cart,
-            preferenceId,
-            createdAt: new Date(),
-          });
-
           setPreferenceId(preferenceId);
         } catch (error) {
           console.error("Error creating preference:", error);
@@ -132,22 +125,6 @@ function Cart() {
     }
   };
 
-  const handlePaymentSuccess = async () => {
-    try {
-      for (const item of cart) {
-        const itemRef = doc(db, 'products', item.id);
-        await updateDoc(itemRef, {
-          stock: increment(-item.quantity)
-        });
-      }
-      clearCart();
-      alert("Pago exitoso y stock actualizado!");
-    } catch (error) {
-      console.error("Error updating stock:", error);
-      setErrorMessage("Error updating stock: " + error.message);
-    }
-  };
-
   return (
     <section className="bg-white py-8 antialiased md:py-16 kaisei">
       <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
@@ -172,7 +149,7 @@ function Cart() {
                 cart.map((item) => (
                   <ItemCart
                     key={item.id}
-                    image={Image1}
+                    image={item.imageUrl}
                     description={item.name}
                     initialQuantity={item.quantity}
                     price={item.price}
@@ -186,7 +163,9 @@ function Cart() {
             </div>
           </div>
           {cart.length > 0 && preferenceId && (
-            <OrderSummary cart={cart} preferenceId={preferenceId} onPaymentSuccess={handlePaymentSuccess} />
+            <div>
+              <OrderSummary cart={cart} preferenceId={preferenceId} />
+            </div>
           )}
           {errorMessage && <p className="text-red-500">{errorMessage}</p>}
         </div>

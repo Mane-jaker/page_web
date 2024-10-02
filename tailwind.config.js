@@ -9,6 +9,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        monster: ['Monster', 'sans-serif'],
+      },
       keyframes: {
         slideIn: {
           '0%': { transform: 'translateX(-100%)', opacity: '0' },

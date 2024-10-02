@@ -1,6 +1,6 @@
-import AsideDashboard from "../components/AsideDashboard"
-import HeaderDashboard from "../components/HeaderDashboard"
-import LayoutDashboard from "../components/LayoutDashboard"
+import AsideDashboard from "../components/AsideDashboard";
+import HeaderDashboard from "../components/HeaderDashboard";
+import { Outlet } from "react-router-dom";
 
 function Dashboard() {
     return (
@@ -8,7 +8,7 @@ function Dashboard() {
             <HeaderDashboard />
             <div className="flex h-screen mt-24">
                 <AsideDashboard />
-                <LayoutDashboard />
+                <Outlet />
             </div>
         </div>
     )

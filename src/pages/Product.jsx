@@ -3,7 +3,6 @@ import BreadCrumb from "../components/BreadCrumb";
 import { ProductsContext } from "../context/ProductsContext";
 import { useParams } from 'react-router-dom';
 import Carousels from '../components/Carousel';
-import img from '../assets/xiles.png';
 import { CartContext } from '../context/CartContext';
 
 function Product() {
@@ -13,26 +12,29 @@ function Product() {
   const [quantity, setQuantity] = useState(1);
   const { addToCart, cart } = useContext(CartContext);
 
-  // Nuevo estado para controlar si el producto se está agregando
-  const [isAdding, setIsAdding] = useState(false);
-
   const handleQuantityChange = (e) => {
     const value = Math.max(1, Math.min(product.stock, parseInt(e.target.value)));
     setQuantity(value);
   };
 
   const handleAddToCart = () => {
-    setIsAdding(true); // Activa el estado de "agregando"
+    const existingItem = cart.find(item => item.id === product.id);
+    const totalQuantity = existingItem ? existingItem.quantity + quantity : quantity;
+
+    if (totalQuantity > product.stock) {
+      alert(`No puedes agregar más de ${product.stock} unidades de este producto.`);
+      return;
+    }
+
     addToCart({
       id: product.id,
       name: product.name,
+      imageUrl: product.imageUrl,
       quantity: quantity,
       price: product.price
     });
-    console.log(cart)
-    setTimeout(() => {
-      setIsAdding(false); // Desactiva el estado de "agregando"
-    }, 1000); // Simula un retraso de 1 segundo (puedes ajustar esto según sea necesario)
+
+    console.log(cart);
   };
 
   if (loading) {
@@ -61,7 +63,7 @@ function Product() {
       </div>
       <div className="flex flex-wrap w-full">
         <div className="w-full md:w-1/2 pr-2">
-          <img src={img} alt="Xiles" className="w-full" />
+          <img src={product.imageUrl} alt="Xiles" className="w-full" />
         </div>
         <div className="w-full md:w-1/2 pl-2 space-y-6">
           <h1 className="font-bold kaisei text-2xl">{product.name}</h1>
@@ -87,9 +89,8 @@ function Product() {
           <button
             className="bg-black hover:bg-gray-700 text-white py-3 px-4 text-sm"
             onClick={handleAddToCart}
-            disabled={isAdding} // Deshabilita el botón mientras se está agregando
           >
-            {isAdding ? 'Agregando...' : 'Agregar al carrito'}
+            Agregar al carrito
           </button>
         </div>
       </div>

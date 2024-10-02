@@ -9,3 +9,10 @@
 .LohitBengali {
     font-family: "Lohit Bengali", serif;
 }
+
+@font-face {
+    font-family: 'Monster';
+    src: url('../assets/Monster-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
